@@ -1,0 +1,154 @@
+.seal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  overflow: hidden;
+  transition: opacity 0.3s ease;
+}
+.seal[data-fading="true"] { opacity: 0; }
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.stamp {
+  position: relative;
+  z-index: 1;
+  padding: 48px 16px 0;
+  text-align: center;
+  max-width: 560px;
+  transition: opacity 0.45s ease;
+}
+
+.mark {
+  font-family: var(--display);
+  font-size: clamp(30px, 8vw, 58px);
+  line-height: 1;
+  color: var(--char);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.mark em { font-style: normal; color: #6b4a18; }
+
+.sub {
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6b5732;
+  margin: 14px 0 0;
+}
+
+.warning {
+  margin: 30px auto 0;
+  border: 3px solid var(--char);
+  padding: 14px 18px;
+  max-width: 440px;
+  text-align: left;
+  color: var(--char);
+  background: rgba(0, 0, 0, 0.04);
+}
+.warning h2 {
+  font-family: var(--display);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+.warning p { margin: 0; font-size: 12.5px; line-height: 1.55; }
+
+.lighterWrap {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 0 16px 42px;
+  padding-bottom: calc(42px + env(safe-area-inset-bottom, 0px));
+}
+
+.lightBtn {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 10px;
+  cursor: pointer;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+}
+.lightBtn:disabled { cursor: default; }
+
+.cig {
+  max-width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 6px 12px rgba(40, 24, 4, 0.35));
+  transition: transform 0.35s ease;
+}
+.lightBtn:hover:not(:disabled) .cig { transform: translateY(-2px) rotate(-1.2deg); }
+
+/* The tip only chars once it is lit. */
+.ash { opacity: 0; transition: opacity 0.5s ease 0.15s; }
+.ash[data-lit="true"] { opacity: 1; }
+
+.ember { opacity: 0; transform-origin: 21px 28.5px; }
+.ember[data-lit="true"] {
+  opacity: 1;
+  animation: catch 0.45s ease-out forwards, glow 1.5s ease-in-out infinite 0.45s;
+}
+
+@keyframes catch {
+  from { opacity: 0; transform: scale(0.35); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes glow {
+  0%, 100% { opacity: 1;    transform: scale(1); }
+  50%      { opacity: 0.86; transform: scale(1.08); }
+}
+
+.smoke {
+  fill: none;
+  stroke: rgba(216, 207, 192, 0.42);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0;
+}
+.smoke[data-lit="true"] { animation: rise 2.6s ease-out 0.35s infinite; }
+
+@keyframes rise {
+  0%   { opacity: 0;    transform: translateY(6px)   scaleX(0.8); }
+  25%  { opacity: 0.55; }
+  100% { opacity: 0;    transform: translateY(-26px) scaleX(1.35); }
+}
+
+.hint {
+  font-family: var(--display);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--char);
+  text-transform: uppercase;
+}
+.lightBtn:hover:not(:disabled) .hint { color: #6b4a18; }
+.lightBtn:disabled .hint { color: #8a6a34; }
+
+.skip {
+  appearance: none;
+  border: 0;
+  background: none;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6b5732;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 6px;
+}
+.skip:hover { color: var(--char); }
