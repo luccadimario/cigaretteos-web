@@ -1,0 +1,73 @@
+.wrap {
+  border: 1px solid var(--line-2);
+  background: var(--tar-2);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  margin: 0;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--tar-3);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+.barName { font-family: var(--display); color: var(--nicotine); }
+
+.screen {
+  font-family: var(--display);
+  font-size: 20px;      /* one glyph pixel = font-size/10, so 20px is a crisp 2x */
+  line-height: 1.5;
+  padding: 16px 14px 18px;
+  height: var(--term-h, 340px);
+  overflow-y: auto;
+  cursor: text;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+@media (max-width: 560px) { .screen { font-size: 15px; height: 300px; } }
+
+.line { color: var(--bone); }
+.dim { color: var(--ash); }
+.ember { color: var(--ember); }
+.yellow { color: var(--nicotine); }
+
+.echo { color: var(--paper); }
+.prompt { color: var(--nicotine); }
+
+.inputRow { display: flex; align-items: baseline; gap: 0; }
+
+.input {
+  flex: 1;
+  appearance: none;
+  border: 0;
+  background: none;
+  outline: none;
+  font: inherit;
+  color: var(--bone);
+  padding: 0;
+  min-width: 0;
+  caret-color: var(--ember);
+}
+
+.halted { color: var(--ash); }
+.reset {
+  appearance: none;
+  border: 1px solid var(--line-2);
+  background: none;
+  font-family: var(--display);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ash);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.reset:hover { border-color: var(--ember); color: var(--ember); }

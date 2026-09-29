@@ -1,89 +1,74 @@
 import Gate from "./components/Gate";
+import Cough from "./components/Cough";
+import Stain from "./components/Stain";
+import Terminal from "./components/Terminal";
+import BurntEdge from "./components/BurntEdge";
+import Barcode from "./components/Barcode";
 import styles from "./page.module.css";
-import { REPO, jokes, milestones, specs } from "@/lib/content";
+import { REPO, milestones, specs, tarNicotine, warnings } from "@/lib/content";
+
+const done = milestones.filter((m) => m.state === "yes").length;
 
 export default function Home() {
   return (
     <Gate>
-      <main className={styles.site}>
-        <header className={styles.hero}>
+      <Stain />
+      <Cough />
+      <main className={styles.main}>
+        {/* ---------------------------------------------------------- hero */}
+        <header className={`${styles.wrap} ${styles.hero}`}>
           <p className={styles.eyebrow}>
             x86-64 &middot; freestanding &middot; boots on real metal
           </p>
-          <h1 className={styles.title}>
+          <h1 className={styles.mast}>
             cigarette<em>OS</em>
           </h1>
-          <p className={styles.tagline}>One of these is going to kill you.</p>
 
-          <p className={styles.lede}>
-            A hobby kernel that is <strong>bad on purpose</strong>. It boots
-            through Limine into long mode, paints its own framebuffer with a
-            font drawn by hand, catches its own page faults, and runs a shell
-            called <code>ash</code> &mdash; and then it burns down and halts,
-            because that is what a cigarette does.
-          </p>
-          <p className={styles.lede}>
-            The rule: every joke has to touch a real subsystem. The cigarette
-            burning down needs a timer, so there is a real PIT driver. The
-            oracle needs entropy, so there is real entropy. Nothing is faked,
-            which is the only reason any of it is funny.
-          </p>
+          <div className={styles.heroGrid}>
+            <div className={styles.pitch}>
+              <p className={styles.tagline}>One of these is going to kill you.</p>
+              <p className={styles.lede}>
+                A hobby kernel that is <strong>bad on purpose</strong>. It boots
+                into long mode, draws its own font, catches its own page faults
+                and runs a shell called <code>ash</code> &mdash; then it burns
+                down and halts, because that is what a cigarette does.
+              </p>
+              <p className={styles.lede}>
+                Every joke touches a real subsystem. Nothing is faked, which is
+                the only reason any of it is funny.
+              </p>
+              <div className={styles.actions}>
+                <a className={styles.btn} href={REPO}>
+                  Source
+                </a>
+                <a className={`${styles.btn} ${styles.btnGhost}`} href="#build">
+                  Build it
+                </a>
+              </div>
+            </div>
 
-          <div className={styles.actions}>
-            <a className={styles.btn} href={REPO}>
-              Source
-            </a>
-            <a className={`${styles.btn} ${styles.btnGhost}`} href="#build">
-              Build it
-            </a>
+            <div className={styles.heroTerm}>
+              <Terminal />
+              <p className={styles.termNote}>
+                Try <code>help</code>, then <code>peek 0xb8000</code>.
+              </p>
+            </div>
           </div>
         </header>
 
-        <section className={styles.section} id="boots">
-          <h2 className={styles.h2}>It boots</h2>
-          <p className={styles.note}>
-            Serial output from a cold boot, verbatim. Every line is a subsystem
-            that was a black screen a week ago.
-          </p>
-
-          <pre className={styles.pre}>
-            <span className={styles.c}>$ make run</span>
-            {"\n"}gdt: cs reloaded{"\n"}idt: installed{"\n"}pic: remapped to
-            32-47, all masked{"\n"}pit: 250 hz, irq0+irq1 live, interrupts
-            enabled{"\n"}cigaretteOS: boot ok{"\n"}
-          </pre>
-
-          <figure className={styles.figure}>
-            <pre className={styles.pre}>
-              <span className={styles.c}>ash&gt; peek 0xb8000</span>
-              {"\n\n"}
-              <span className={styles.e}>*** #PF page fault</span>
-              {"\n"}    vector 14   error 0x0{"\n"}    rip
-              0xffffffff800028a1{"\n"}    rsp    0xffff80000ff98f70{"\n"}
-              {"    "}rflags 0x10282{"\n"}    cr2    0x00000000000b8000{"\n"}
-              {"    "}cause  page not present, on a read{"\n"}    halted.{"\n"}
-            </pre>
-            <figcaption className={styles.caption}>
-              Reading VGA text memory, which Limine stops mapping at base
-              revision 1. Before the interrupt descriptor table existed this
-              was a silent reboot: page fault, no handler, double fault, no
-              handler, triple fault, machine resets. Now something is home to
-              answer.
-            </figcaption>
-          </figure>
-        </section>
-
-        <section className={styles.section} id="burn">
-          <h2 className={styles.h2}>Burn-down</h2>
-          <p className={styles.note}>
-            Progress, measured the only honest way. The ember sits where the
-            work actually is.
-          </p>
+        {/* ----------------------------------------------------- burn-down */}
+        <section className={`${styles.wrap} ${styles.section}`} id="burn">
+          <div className={styles.head}>
+            <h2 className={styles.h2}>Burn-down</h2>
+            <p className={styles.count}>
+              {done} of {milestones.length} smoked
+            </p>
+          </div>
 
           <div
             className={styles.cig}
             role="img"
-            aria-label="Progress: five of seven milestones complete."
+            aria-label={`Progress: ${done} of ${milestones.length} milestones complete.`}
           >
             {milestones.map((m) => (
               <span
@@ -108,97 +93,156 @@ export default function Home() {
           </ol>
         </section>
 
-        <section className={styles.section} id="features">
-          <h2 className={styles.h2}>Deliberate defects</h2>
-          <p className={styles.note}>
-            Each of these is a real driver wearing a bad idea. The joke and the
-            subsystem are the same code.
-          </p>
+        {/* -------------------------------------------------------- boots */}
+        <section className={`${styles.wrap} ${styles.section}`} id="boots">
+          <div className={styles.head}>
+            <h2 className={styles.h2}>It boots</h2>
+          </div>
 
-          <div className={styles.jokes}>
-            {jokes.map((j) => (
-              <article key={j.title} className={styles.joke}>
-                <span className={styles.kind}>{j.kind}</span>
-                <h3>{j.title}</h3>
-                <p>{j.body}</p>
-              </article>
-            ))}
+          <div className={styles.twoUp}>
+            <figure className={styles.figure}>
+              <pre className={styles.pre}>
+                <span className={styles.c}>$ make run</span>
+                {"\n"}gdt: cs reloaded{"\n"}idt: installed{"\n"}pic: remapped to
+                32-47{"\n"}pit: 250 hz, interrupts on{"\n"}cigaretteOS: boot ok{"\n"}
+              </pre>
+              <figcaption className={styles.caption}>
+                Serial output from a cold boot, verbatim.
+              </figcaption>
+            </figure>
+
+            <figure className={styles.figure}>
+              <pre className={styles.pre}>
+                <span className={styles.c}>ash&gt; peek 0xb8000</span>
+                {"\n"}
+                <span className={styles.e}>*** #PF page fault</span>
+                {"\n"}    rip    0xffffffff800028a1{"\n"}    cr2
+                0x00000000000b8000{"\n"}    cause  not present, read
+                {"\n"}    halted.{"\n"}
+              </pre>
+              <figcaption className={styles.caption}>
+                Before the IDT existed this was a silent reboot. Now something is
+                home to answer.
+              </figcaption>
+            </figure>
           </div>
         </section>
 
-        <section className={styles.section} id="specs">
-          <h2 className={styles.h2}>What is actually in there</h2>
-          <p className={styles.note}>
-            No jokes in this table. These are the real numbers, and everything
-            in it was written from scratch except the bootloader.
-          </p>
-          <div className={styles.tableWrap}>
-            <table className={styles.specs}>
-              <tbody>
-                {specs.map(([k, v]) => (
-                  <tr key={k}>
-                    <th scope="row">{k}</th>
-                    <td>{v}</td>
-                  </tr>
+        {/* ------------------------------------------------- the pack band */}
+        <div className={styles.band}>
+          <BurntEdge seed={7} />
+          <section className={styles.paper} id="warnings">
+            <div className={styles.wrap}>
+              <div className={styles.paperHead}>
+                <h2 className={styles.h2Paper}>{"Surgeon General's warnings"}</h2>
+                <p className={styles.paperNote}>
+                  Real packs rotate their warnings. All six of these apply at
+                  once.
+                </p>
+              </div>
+
+              <div className={styles.warnings}>
+                {warnings.map((w) => (
+                  <article key={w.lead} className={styles.warning}>
+                    <h3>Warning</h3>
+                    <p className={styles.wLead}>{w.lead}</p>
+                    <p className={styles.wBody}>{w.body}</p>
+                  </article>
                 ))}
-              </tbody>
-            </table>
+              </div>
+
+              <div className={styles.packGrid}>
+                <section className={styles.panel} id="specs" aria-labelledby="contents-h">
+                  <h2 id="contents-h" className={styles.panelH}>
+                    Contents
+                  </h2>
+                  <p className={styles.panelSub}>
+                    One kernel. Everything here was written from scratch except
+                    the bootloader, and every value is real.
+                  </p>
+                  <dl className={styles.contents}>
+                    {specs.map(([k, v]) => (
+                      <div key={k} className={styles.row}>
+                        <dt>{k}</dt>
+                        <span className={styles.leader} aria-hidden="true" />
+                        <dd>{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+
+                <div className={styles.side}>
+                  <p className={styles.twenty}>
+                    <span className={styles.big20}>20</span>
+                    <span className={styles.twentyLabel}>Class A boots</span>
+                  </p>
+
+                  <dl className={styles.tar}>
+                    <div>
+                      <dt>Tar</dt>
+                      <dd>
+                        <b>{tarNicotine.tar}</b>
+                        <small>{tarNicotine.tarNote}</small>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Nicotine</dt>
+                      <dd>
+                        <b>{tarNicotine.nicotine}</b>
+                        <small>{tarNicotine.nicotineNote}</small>
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <Barcode label="0 0B8000 000000 1" />
+                  <p className={styles.fine}>Keep out of reach of production.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+          <BurntEdge seed={23} flip />
+        </div>
+
+        {/* ------------------------------------------------ build + pong */}
+        <section className={`${styles.wrap} ${styles.section}`} id="build">
+          <div className={styles.twoUp}>
+            <div>
+              <h2 className={styles.h2}>Build it</h2>
+              <p className={styles.p}>
+                macOS with Homebrew. Apple&rsquo;s <code>ld64</code> only speaks
+                Mach-O, so the linker must be a cross linker &mdash; but the host
+                Clang compiles for the target fine.
+              </p>
+              <pre className={styles.pre}>
+                <span className={styles.c}># about 10 MB of tooling</span>
+                {"\n"}brew install x86_64-elf-binutils xorriso{"\n\n"}
+                <span className={styles.c}># the bootloader</span>
+                {"\n"}git clone https://github.com/limine-bootloader/limine \{"\n"}
+                {"  "}--branch=v10.x-binary --depth=1{"\n"}make -C limine{"\n\n"}
+                <span className={styles.c}># build the ISO and boot it</span>
+                {"\n"}make run{"\n"}
+              </pre>
+            </div>
+
+            <div id="demo">
+              <h2 className={styles.h2}>There is Pong in it</h2>
+              <p className={styles.p}>
+                The <code>demo</code> command hands the framebuffer to a C++20
+                scratch pad running Pong &mdash; collision, scoring, and digits
+                drawn by scaling the same glyphs the console uses.
+              </p>
+              <p className={styles.p}>
+                No floating point: the interrupt handlers don&rsquo;t save the
+                XMM registers, so it&rsquo;s all integers and fixed point, the
+                way it was done the first time around.
+              </p>
+            </div>
           </div>
         </section>
 
-        <section className={styles.section} id="build">
-          <h2 className={styles.h2}>Build it</h2>
-          <p className={styles.note}>
-            macOS with Homebrew. The linker has to be a cross linker &mdash;
-            Apple ships <code>ld64</code>, which only speaks Mach-O &mdash; but
-            the host Clang compiles for the target fine, so a full cross GCC is
-            optional.
-          </p>
-
-          <pre className={styles.pre}>
-            <span className={styles.c}># about 10 MB of tooling</span>
-            {"\n"}brew install x86_64-elf-binutils xorriso{"\n\n"}
-            <span className={styles.c}># the bootloader</span>
-            {"\n"}git clone https://github.com/limine-bootloader/limine \{"\n"}
-            {"  "}--branch=v10.x-binary --depth=1 &amp;&amp; make -C limine
-            {"\n\n"}
-            <span className={styles.c}># build the ISO and boot it</span>
-            {"\n"}make run{"\n"}
-          </pre>
-
-          <p className={styles.p}>
-            Press <kbd>Enter</kbd> at the Limine menu. Type <code>help</code>.
-            Then type <code>peek 0xb8000</code> and read the fault dump, which
-            is the whole point.
-          </p>
-        </section>
-
-        <section className={styles.section} id="demo">
-          <h2 className={styles.h2}>There is Pong in it</h2>
-          <p className={styles.p}>
-            The <code>demo</code> command hands the framebuffer to a C++20
-            scratch pad and runs Pong &mdash; collision, scoring, a win banner,
-            digits rendered by scaling the same 8&times;16 glyphs the console
-            uses. It allocates through the kernel heap, because{" "}
-            <code>new</code> and <code>delete</code> had to be wired to
-            something.
-          </p>
-          <p className={styles.p}>
-            No floating point. The kernel builds with <code>-mno-sse</code>,
-            since the interrupt handlers do not save the XMM registers.
-            Everything is integers and fixed point, which is how it was done
-            the first time around.
-          </p>
-        </section>
-
-        <footer className={styles.footer}>
-          <span>
-            cigaretteOS &mdash; a hobby kernel. Smoking is bad for you; so is
-            this code.
-          </span>
-          <span>
-            <a href={REPO}>github</a>
-          </span>
+        <footer className={`${styles.wrap} ${styles.footer}`}>
+          <span>cigaretteOS. Smoking is bad for you; so is this code.</span>
+          <a href={REPO}>github</a>
         </footer>
       </main>
     </Gate>

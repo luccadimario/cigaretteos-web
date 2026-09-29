@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Cigarette from "./Cigarette";
+import { jukebox } from "@/lib/jukebox";
 import { FRAG, VERT } from "./burnShaders";
 import styles from "./Seal.module.css";
 
@@ -51,6 +52,7 @@ export default function Seal({ onOpen }: Props) {
 
   const [lit, setLit] = useState(false);
   const [fading, setFading] = useState(false);
+  const [painted, setPainted] = useState(false);
 
   const finish = useCallback(() => {
     document.documentElement.style.overflow = "";
@@ -168,6 +170,9 @@ export default function Seal({ onOpen }: Props) {
     };
 
     resize();
+    /* Hand over from the CSS paper to the shader only once a frame of the
+       shader's paper is actually on screen. */
+    requestAnimationFrame(() => setPainted(true));
     document.documentElement.style.overflow = "hidden";
     window.addEventListener("resize", resize);
 
@@ -220,6 +225,10 @@ export default function Seal({ onOpen }: Props) {
 
   const light = useCallback(() => {
     if (burningRef.current) return;
+
+    /* The only moment a browser will let audio start is inside the gesture
+       itself, so create and resume the context here rather than later. */
+    jukebox.unlock();
     setLit(true);
 
     /* Burn outward from the ember itself. The SVG puts the ember near the
@@ -241,6 +250,7 @@ export default function Seal({ onOpen }: Props) {
       className={styles.seal}
       data-seal="true"
       data-fading={fading}
+      data-painted={painted}
       aria-label="Sealed pack. Light the cigarette to open the site."
     >
       <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
@@ -252,7 +262,7 @@ export default function Seal({ onOpen }: Props) {
         <p className={styles.sub}>20 boots &middot; king size &middot; ring&nbsp;0</p>
 
         <div className={styles.warning}>
-          <h2>Surgeon General&rsquo;s Warning</h2>
+          <h2>{"Surgeon General's Warning"}</h2>
           <p>
             This operating system has no memory protection, no user mode and
             one allocator that rounds every request up to a megabyte. Writing
@@ -274,7 +284,14 @@ export default function Seal({ onOpen }: Props) {
           <span className={styles.hint}>{lit ? "burning" : "Light it"}</span>
         </button>
 
-        <button type="button" className={styles.skip} onClick={finish}>
+        <button
+          type="button"
+          className={styles.skip}
+          onClick={() => {
+            jukebox.unlock();
+            finish();
+          }}
+        >
           Skip the ceremony
         </button>
       </div>

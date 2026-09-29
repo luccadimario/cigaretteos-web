@@ -10,6 +10,26 @@
 }
 .seal[data-fading="true"] { opacity: 0; }
 
+/* The paper, in CSS, so the very first paint is opaque. WebGL can only draw
+   once JavaScript has loaded; without this the dark site shows through the
+   seal for a moment before the paper appears. Once the shader has drawn its
+   first frame it takes over and this goes transparent — it has to, or the
+   burn's holes would show this instead of the site. */
+.seal {
+  background-color: #c9b88e;
+  background-image:
+    radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0) 45%, rgba(60, 40, 12, 0.3) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .32 0 0 0 0 .24 0 0 0 0 .1 0 0 0 .14 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(155deg, #d3c29a 0%, #c9b88e 50%, #b4a175 100%);
+}
+.seal[data-painted="true"] { background: transparent; }
+
+/* Reduced motion skips the gate entirely. Hiding it in CSS too means it
+   never appears for a frame before the script decides to skip it. */
+@media (prefers-reduced-motion: reduce) {
+  .seal { display: none; }
+}
+
 .canvas {
   position: absolute;
   inset: 0;
@@ -29,7 +49,7 @@
 
 .mark {
   font-family: var(--display);
-  font-size: clamp(30px, 8vw, 58px);
+  font-size: clamp(40px, 7vw, 70px);
   line-height: 1;
   color: var(--char);
   letter-spacing: -0.02em;
@@ -130,7 +150,7 @@
 
 .hint {
   font-family: var(--display);
-  font-size: 11px;
+  font-size: 20px;
   letter-spacing: 0.16em;
   color: var(--char);
   text-transform: uppercase;

@@ -1,0 +1,47 @@
+.toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  appearance: none;
+  border: 1px solid var(--line-2);
+  background: var(--tar-2);
+  color: var(--ash);
+  font-family: var(--display);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 9px 12px;
+  cursor: pointer;
+}
+.toggle:hover { border-color: var(--nicotine); color: var(--bone); }
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 11px;
+}
+.bars i {
+  display: block;
+  width: 2px;
+  background: var(--nicotine);
+  height: 30%;
+}
+.toggle[data-on="true"] .bars i { animation: vu 0.9s ease-in-out infinite; }
+.toggle[data-on="true"] .bars i:nth-child(2) { animation-delay: 0.15s; }
+.toggle[data-on="true"] .bars i:nth-child(3) { animation-delay: 0.3s; }
+.toggle[data-on="false"] .bars i { height: 20%; opacity: 0.5; }
+
+@keyframes vu {
+  0%, 100% { height: 25%; }
+  50%      { height: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle[data-on="true"] .bars i { animation: none; height: 60%; }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Ambience from "./Ambience";
 import Seal from "./Seal";
 
 /* The site is always in the DOM — the seal just covers it. That keeps the
@@ -17,6 +18,7 @@ export default function Gate({ children }: { children: React.ReactNode }) {
   return (
     <>
       {children}
+      {open && <Ambience />}
       {!open && <Seal onOpen={() => setOpen(true)} />}
     </>
   );

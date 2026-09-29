@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
-import { Silkscreen, IBM_Plex_Mono } from "next/font/google";
+import localFont from "next/font/local";
+import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 
-/* Silkscreen sits on an 8px grid, which is the same grid the kernel's
-   hand-drawn 8x16 console font sits on. */
-const display = Silkscreen({
-  weight: ["400", "700"],
-  subsets: ["latin"],
+/* The kernel's own console font, converted straight out of font.c by
+   scripts/mkwebfont.py. Not a font that looks like it — the same bytes the
+   operating system draws with, 95 glyphs, 2.8 KB. */
+const display = localFont({
+  src: [
+    { path: "../public/fonts/cigaretteos.woff", weight: "400", style: "normal" },
+  ],
   variable: "--font-display",
   display: "swap",
+  fallback: ["Courier New", "monospace"],
 });
 
 const mono = IBM_Plex_Mono({

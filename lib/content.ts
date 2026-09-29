@@ -20,38 +20,42 @@ export const milestones: {
   { n: "07", label: "Scheduler: vowel weighting and smoke breaks", state: "no", word: "Unlit" },
 ];
 
-export const jokes: { kind: string; title: string; body: string }[] = [
+/* The deliberate defects, rewritten as the warnings on the side of the
+   pack. Real packs rotate their warnings; here all six apply at once. */
+export const warnings: { lead: string; body: string }[] = [
   {
-    kind: "Timer",
-    title: "The OS burns down",
-    body: "A cigarette shrinks with uptime. At the filter, the kernel halts. Rebooting lights another. The pack holds twenty, stored in CMOS so it survives a power cycle on real hardware.",
+    lead: "This operating system burns down.",
+    body: "A cigarette shrinks with uptime. At the filter the kernel halts, and rebooting lights another. The pack holds twenty, counted in CMOS so it survives a power cycle on real hardware.",
   },
   {
-    kind: "Allocator",
-    title: "malloc rounds to 1 MiB",
+    lead: "malloc rounds every request up to one megabyte.",
     body: "free prints ok and does nothing. You get sixteen allocations. A failed one doubles the next request, because the allocator believes in the martingale.",
   },
   {
-    kind: "Entropy",
-    title: "The Bum",
-    body: "A word-level Markov chain compiled into the kernel as a C array, sampled with integer maths and seeded from keypress timing. Answers end with odds between 91% and 99%. Double or nothing deletes the answer and a random file.",
+    lead: "The Bum is not a licensed financial advisor.",
+    body: "A word-level Markov chain compiled into the kernel, seeded from keypress timing. Every answer ends with odds between 91% and 99%. Double or nothing deletes the answer and a random file.",
   },
   {
-    kind: "Interrupt",
-    title: "The cough",
-    body: "At random the kernel coughs, flips one byte in video memory and drives the PC speaker through PIT channel 2. It gets more frequent as the cigarette gets shorter.",
+    lead: "This kernel coughs.",
+    body: "At random it flips one byte in video memory and drives the PC speaker through PIT channel 2. It coughs more often as the cigarette gets shorter.",
   },
   {
-    kind: "Scheduler",
-    title: "Vowel weighting",
-    body: "CPU time in proportion to the number of vowels in a process name, with a mandatory five-minute smoke break every ten minutes. Processes bet for time slices. At zero chips they are killed.",
+    lead: "Vowel weighting may starve processes named \u201crhythm\u201d.",
+    body: "CPU time is shared in proportion to the vowels in a process name, with a mandatory five-minute smoke break every ten minutes. At zero chips a process is killed.",
   },
   {
-    kind: "Panic",
-    title: "Lottery numbers",
-    body: "Kernel panics print as six lottery numbers that encode the real fault vector. The information is all there. Recovering it is your problem.",
+    lead: "Kernel panics are printed as lottery numbers.",
+    body: "Six numbers that encode the real fault vector. The information is all there. Recovering it is your problem.",
   },
 ];
+
+/* The tar and nicotine line old packs printed on the side. Real values. */
+export const tarNicotine = {
+  tar: "0xffffffff80000000",
+  tarNote: "kernel base",
+  nicotine: "250.04 Hz",
+  nicotineNote: "PIT, divisor 4772",
+};
 
 export const specs: [string, string][] = [
   ["Target", "x86-64, freestanding, no libc"],

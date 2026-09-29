@@ -26,6 +26,9 @@
 
   --measure: 66ch;
 
+  /* Raised over time by <Stain />. */
+  --tar-film: 0;
+
   color-scheme: dark;
 }
 
@@ -58,6 +61,19 @@ body::before {
       transparent 3px
     ),
     radial-gradient(900px 600px at 82% -8%, rgba(126, 108, 38, 0.16), transparent 70%);
+}
+
+/* The film. Separate layer so it sits over the content, under nothing. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(120% 120% at 50% 0%, #C39A32 0%, #6B4E12 100%);
+  mix-blend-mode: multiply;
+  opacity: var(--tar-film);
+  transition: opacity 4s linear;
 }
 
 a {
